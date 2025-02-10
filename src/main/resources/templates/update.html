@@ -6,26 +6,24 @@
 </head>
 <body>
 <p>Change User</p>
-<form th:method="POST" th:action="@{|/update?id=${user.id}|}" th:object="${user}">
+<form th:method="POST" th:action="@{|update?id=${user.id}|}" th:object="${user}">
     <label for="name">Name:</label>
     <input type="text" th:field="*{username}" id="name">
     <br>
-    <label for="surname">Surname:</label>
-    <input type="text" th:field="*{surname}" id="surname">
+    <label for="phone">Phone:</label>
+    <input type="text" th:field="*{phone}" id="phone">
     <br>
-    <label for="age">Age:</label>
-    <input type="text" th:field="*{age}" id="age">
+
+    <label for="pass">Pass:</label>
+    <input type="password" th:field="*{password}" id="pass" required>
     <br>
+
     <label>
         <input type="checkbox" name="selectedIds" value="1"> ADMIN
     </label><br>
     <label>
         <input type="checkbox" name="selectedIds" value="2"> USER
     </label><br>
-    <label>
-        <input type="checkbox" name="selectedIds" value="3"> SUPER
-    </label>
-    <br>
 
     <input type="submit" value="Update"/>
 </form>

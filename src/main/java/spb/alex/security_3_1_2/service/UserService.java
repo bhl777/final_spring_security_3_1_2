@@ -42,6 +42,12 @@ public class UserService implements UserDetailsService {
     }
 
     public void createUser(User user, Long[] roles) {
+
+        User existingUser = findByName(user.getUsername());
+        if (existingUser != null) {
+            throw new IllegalArgumentException("Пользователь с именем '" + user.getUsername() + "' уже существует");
+        }
+
         user.setPassword(passwordEncoder.encode(user.getPassword())); // Кодируем пароль
         user.setRoles(newRoleSet(roles));
         userRepository.save(user);
@@ -63,5 +69,26 @@ public class UserService implements UserDetailsService {
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+    }
+
+    public void updateUser(Long id, User updatedUser, Long[] roles) {
+
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Пользователь с ID '" + id + "' не найден"));
+
+        existingUser.setUsername(updatedUser.getUsername());
+
+        if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
+            existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+        }
+
+        existingUser.setRoles(newRoleSet(roles));
+
+        userRepository.save(existingUser);
+    }
+
+    public User findByName(String username)
+    {
+        return userRepository.findUserByUsername(username);
     }
 }

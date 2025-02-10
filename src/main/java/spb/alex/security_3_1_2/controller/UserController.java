@@ -1,6 +1,8 @@
 package spb.alex.security_3_1_2.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,7 +24,12 @@ public class UserController {
     }
 
     @GetMapping(value = "/user")
-    public String getUserPage(Model model) {
+    public String getUserProfile(Model model, Authentication authentication) {
+        if (authentication != null) {
+            UserDetails ud = (UserDetails) authentication.getPrincipal();
+            model.addAttribute("user", userService.findByName(ud.getUsername()));
+        }
+
         return "user";
     }
 
@@ -48,7 +55,7 @@ public class UserController {
             return "redirect:/new?error=Password cannot be empty";
         }
 
-        userService.createUser(user,selectedIds);
+        userService.createUser(user, selectedIds);
 
         return "redirect:/admin/users";
     }
@@ -57,7 +64,23 @@ public class UserController {
     public String deleteUser(@RequestParam Long id) {
         userService.deleteUser(id);
 
-        return "redirect:/users";
+        return "redirect:/admin/users";
+    }
+
+    @GetMapping("/update")
+    public String getUpdatePage(@ModelAttribute("user") User user) {
+
+        return "update";
+    }
+
+    @PostMapping("/update")
+    public String updateUser(@ModelAttribute("user") User user,
+                             @RequestParam Long id,
+                             @RequestParam("selectedIds") Long[] selectedIds) {
+
+        userService.updateUser(id, user, selectedIds);
+
+        return "redirect:/admin/users";
     }
 
 }

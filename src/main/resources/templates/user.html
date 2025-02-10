@@ -5,11 +5,15 @@
   <title>Title</title>
 </head>
 <body>
-<h1>
-
-
-  User!!!
-</h1>
+<div th:if="${user}">
+  <h2>Данные пользователя:</h2>
+  <p>Id: <span th:text="${user.getId()}"></span></p>
+  <p>UserName: <span th:text="${user.getUsername()}"></span></p>
+  <p>PhoneNumber: <span th:text="${user.getPhone()}"></span></p>
+  <th:block th:each="role : ${user.getRoles()}">
+    <td><span th:text="${role.name}"> Title </span></td><BR>
+  </th:block>
+</div>
 
 </body>
 </html>
