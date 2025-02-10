@@ -1,11 +1,10 @@
-package model;
+package spb.alex.security_3_1_2.model;
 
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -13,12 +12,16 @@ import java.util.Set;
 public class User implements UserDetails {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
     private String username;
 
+    @Column
     private String password;
 
+    @Column
     private String phone;
 
     @ManyToMany(fetch = FetchType.LAZY)
