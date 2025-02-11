@@ -33,6 +33,16 @@ public class UserController {
         return "user";
     }
 
+    @GetMapping(value = "/admin")
+    public String getAdminProfile(Model model, Authentication authentication) {
+        if (authentication != null) {
+            UserDetails ud = (UserDetails) authentication.getPrincipal();
+            model.addAttribute("user", userService.findByName(ud.getUsername()));
+        }
+
+        return "admin";
+    }
+
     @GetMapping(value = "/admin/users")
     public String listUsers(Model model) {
         model.addAttribute("users", userService.findAllUsers());
@@ -51,7 +61,7 @@ public class UserController {
                           @RequestParam("selectedIds") Long[] selectedIds,
                           BindingResult bindingResult) {
         if (bindingResult.hasErrors() || user.getPassword() == null || user.getPassword().isEmpty()) {
-            // Верните пользователя на форму с сообщением об ошибке
+
             return "redirect:/new?error=Password cannot be empty";
         }
 

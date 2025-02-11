@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>UserPage</title>
+  <title>AdminPage</title>
 </head>
 <body>
 <div th:if="${user}">
-  <h2>Данные пользователя:</h2>
+  <h2>Данные администратора:</h2>
   <p>User ID: <span th:text="${user.getId()}"></span></p>
   <p>Username: <span th:text="${user.getUsername()}"></span></p>
   <p>Phone Number: <span th:text="${user.getPhone()}"></span></p>
