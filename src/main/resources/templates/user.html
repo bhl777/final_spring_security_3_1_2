@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>UserPage</title>
+</head>
+<body>
+<div th:if="${user}">
+  <h2>Данные пользователя:</h2>
+  <p>User ID: <span th:text="${user.getId()}"></span></p>
+  <p>Username: <span th:text="${user.getUsername()}"></span></p>
+  <p>Phone Number: <span th:text="${user.getPhone()}"></span></p>
+  <th:block th:each="role : ${user.getRoles()}">
+    <td><span th:text="${role.name}"> Title </span></td><BR>
+  </th:block>
+</div>
+<br>
+<a href="/logout" style="font-family:sans-serif;color:indigo;font-size:19px">Logout</a>
+</body>
+</html>
