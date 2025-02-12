@@ -12,7 +12,7 @@ public class Role implements GrantedAuthority {
     @Id
     private Long id;
 
-    @Column
+    @Column(unique=true)
     private String name;
 
     @Transient

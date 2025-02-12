@@ -1,0 +1,30 @@
+table {
+    color:green;
+    border-style:solid;
+}
+
+[id="ul"]{
+    color: black;
+}
+
+.table_color1 {
+    color:black ;
+}
+
+.table_color2 {
+    color:darkred ;
+}
+
+.table-bold {
+    font-weight: bold;
+    font-size:32px;
+}
+
+#list{
+    color:black;
+    font-size: x-large;
+}
+
+#list  li {
+    color: chartreuse;
+}
