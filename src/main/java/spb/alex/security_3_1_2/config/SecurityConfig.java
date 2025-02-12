@@ -21,8 +21,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/admin/**").hasRole("ADMIN")       // Только для ADMIN
-                .requestMatchers("/user").hasAnyRole("USER", "ADMIN") // Для USER и ADMIN
+                .requestMatchers("/admin/**").permitAll()//hasRole("ADMIN")       // Только для ADMIN
+                .requestMatchers("/user").permitAll()//hasAnyRole("USER", "ADMIN") // Для USER и ADMIN
                 .anyRequest().authenticated())
                 .formLogin(formLogin -> formLogin
                         .successHandler(successUserHandler))

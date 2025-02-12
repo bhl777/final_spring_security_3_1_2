@@ -15,6 +15,7 @@ import spb.alex.security_3_1_2.repository.UserRepository;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserDetailsService,UserService {
@@ -79,10 +80,47 @@ public class UserServiceImpl implements UserDetailsService,UserService {
         userRepository.deleteById(id);
     }
 
+//    @Override
+//    @Transactional
+//    public void updateUser(Long id, User updatedUser, Long[] roles) {
+//
+//        User existingUser = userRepository.findById(id)
+//                .orElseThrow(() -> new IllegalArgumentException("Пользователь с ID '" + id + "' не найден"));
+//
+//        existingUser.setUsername(updatedUser.getUsername());
+//        existingUser.setPhone(updatedUser.getPhone());
+//
+//        if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
+//            existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+//        }
+//
+//        existingUser.setRoles(newRoleSet(roles));
+//
+//        userRepository.save(existingUser);
+//    }
+
+    @Override
+    public void createUserWithRoles(User user, Set<Role> roles) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        // 2. Получаем полные объекты ролей из базы
+        Set<Role> managedRoles = new HashSet<>(roleRepository.findAllById(
+                roles.stream()
+                        .map(Role::getId)
+                        .collect(Collectors.toList())
+        ));
+
+        // 3. Устанавливаем роли
+        user.setRoles(managedRoles);
+
+        // 4. Сохраняем пользователя
+        userRepository.save(user);
+
+    }
+
     @Override
     @Transactional
-    public void updateUser(Long id, User updatedUser, Long[] roles) {
-
+    public void updateUser(Long id, User updatedUser, Set<Role> roles) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Пользователь с ID '" + id + "' не найден"));
 
@@ -93,7 +131,7 @@ public class UserServiceImpl implements UserDetailsService,UserService {
             existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
         }
 
-        existingUser.setRoles(newRoleSet(roles));
+        existingUser.setRoles(roles);
 
         userRepository.save(existingUser);
     }

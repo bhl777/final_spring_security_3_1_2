@@ -13,7 +13,7 @@
             <td><span th:text="${role.name}"> Title </span></td><p></p>
         </th:block>
         <a th:href="@{'/admin/update?id=' + ${usr.getId()}}" style="font-family:sans-serif;color:blue;font-size:20px">Change user</a>
-        or <a th:href="@{'/delete?id=' + ${usr.getId()}}" style="font-family:sans-serif;color:blue;font-size:20px">Delete user</a>
+        or <a th:href="@{'/admin/delete?id=' + ${usr.getId()}}" style="font-family:sans-serif;color:blue;font-size:20px">Delete user</a>
     </th:block>
 </div>
 <br>
