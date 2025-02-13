@@ -21,8 +21,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/admin/**").hasRole("ADMIN")       // Только для ADMIN
-                .requestMatchers("/user").hasAnyRole("USER", "ADMIN") // Для USER и ADMIN
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/user").hasAnyRole("USER", "ADMIN")
                 .anyRequest().authenticated())
                 .formLogin(formLogin -> formLogin
                         .successHandler(successUserHandler))
@@ -33,6 +33,6 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(); // Используем BCrypt для кодирования паролей
+        return new BCryptPasswordEncoder();
     }
 }
