@@ -80,25 +80,6 @@ public class UserServiceImpl implements UserDetailsService,UserService {
         userRepository.deleteById(id);
     }
 
-//    @Override
-//    @Transactional
-//    public void updateUser(Long id, User updatedUser, Long[] roles) {
-//
-//        User existingUser = userRepository.findById(id)
-//                .orElseThrow(() -> new IllegalArgumentException("Пользователь с ID '" + id + "' не найден"));
-//
-//        existingUser.setUsername(updatedUser.getUsername());
-//        existingUser.setPhone(updatedUser.getPhone());
-//
-//        if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
-//            existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
-//        }
-//
-//        existingUser.setRoles(newRoleSet(roles));
-//
-//        userRepository.save(existingUser);
-//    }
-
     @Override
     public void createUserWithRoles(User user, Set<Role> roles) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -134,6 +115,11 @@ public class UserServiceImpl implements UserDetailsService,UserService {
         existingUser.setRoles(roles);
 
         userRepository.save(existingUser);
+    }
+
+    @Override
+    public User findById(Long id) {
+        return userRepository.findUserById(id);
     }
 
     @Override

@@ -1,18 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>AdminPage</title>
+    <meta charset="UTF-8">
+    <title></title>
 </head>
 <body>
-<div th:if="${user}">
-  <h2>Данные администратора:</h2>
-  <p>User ID: <span th:text="${user.getId()}"></span></p>
-  <p>Username: <span th:text="${user.getUsername()}"></span></p>
-  <p>Phone Number: <span th:text="${user.getPhone()}"></span></p>
-  <th:block th:each="role : ${user.getRoles()}">
-    <td><span th:text="${role.name}"> Title </span></td><BR>
-  </th:block>
+<a href="/admin/new" style="font-family:sans-serif;color:indigo;font-size:25px">Add new user</a>
+<div>
+    <th:block th:each="usr : ${users}">
+        <h1 th:text="|ID=${usr.id}, ${usr.username}, Phone number: ${usr.phone}|"></h1>
+        <th:block th:each="role : ${usr.getRoles()}">
+            <td><span th:text="${role.name}"> Title </span></td><p></p>
+        </th:block>
+        <a th:href="@{'/admin/update?id=' + ${usr.getId()}}" style="font-family:sans-serif;color:blue;font-size:20px">Change user</a>
+        or <a th:href="@{'/admin/delete?id=' + ${usr.getId()}}" style="font-family:sans-serif;color:blue;font-size:20px">Delete user</a>
+    </th:block>
 </div>
 <br>
 <a href="/logout" style="font-family:sans-serif;color:indigo;font-size:19px">Logout</a>
