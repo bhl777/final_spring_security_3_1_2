@@ -106,7 +106,9 @@ public class UserServiceImpl implements UserDetailsService,UserService {
                 .orElseThrow(() -> new IllegalArgumentException("Пользователь с ID '" + id + "' не найден"));
 
         existingUser.setUsername(updatedUser.getUsername());
-        existingUser.setPhone(updatedUser.getPhone());
+        existingUser.setAge(updatedUser.getAge());
+        existingUser.setEmail(updatedUser.getEmail());
+        existingUser.setLastName(updatedUser.getLastName());
 
         if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
             existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));

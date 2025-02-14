@@ -1,22 +1,228 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<!doctype html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title></title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="">
+<meta name="author" content="">
+<meta name="generator" content="">
+<title>Dashboard</title>
+
+<!-- Bootstrap core CSS -->
+<link href="/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- JS scripts -->
+<script src="/js/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/admin.js" type="text/javascript"></script>
+
+<!-- Custom styles for this template -->
+<link href="/css/dashboard.css" rel="stylesheet">
+
 </head>
 <body>
-<a href="/admin/new" style="font-family:sans-serif;color:indigo;font-size:25px">Add new user</a>
-<div>
-    <th:block th:each="usr : ${users}">
-        <h1 th:text="|ID=${usr.id}, ${usr.username}, Phone number: ${usr.phone}|"></h1>
-        <th:block th:each="role : ${usr.getRoles()}">
-            <td><span th:text="${role.name}"> Title </span></td><p></p>
-        </th:block>
-        <a th:href="@{'/admin/update?id=' + ${usr.getId()}}" style="font-family:sans-serif;color:blue;font-size:20px">Change user</a>
-        or <a th:href="@{'/admin/delete?id=' + ${usr.getId()}}" style="font-family:sans-serif;color:blue;font-size:20px">Delete user</a>
-    </th:block>
+    
+<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow" th:object="${currUser}">
+	<a class="navbar-brand border border-danger bg-transparent border-0 shadow-none mr-0 px-3" href="javascript:void(0)">
+		<strong th:text="${currUser.email}"></strong>
+		with roles:
+		<th:block th:each="role : ${currUser.getRoles()}"><span th:text="${role.name}"></span>&nbsp;</th:block>
+	</a>
+	<button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+	<ul class="navbar-nav px-3">
+		<li class="nav-item text-nowrap">
+			<a class="nav-link" href="/logout">Logout</a>
+		</li>
+	</ul>
+</nav>
+
+<div class="container-fluid">
+	<div class="row">
+
+<!-- Боковое меню -->
+<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+	<div class="sidebar-sticky pt-3">
+		<ul class="nav nav-pills flex-column">
+			<li class="nav-item">
+				<a class="nav-link active" href="/admin/admin">Admin <span class="sr-only">(current)</span></a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="/user">User</a>
+			</li>
+		</ul>
+	</div>
+</nav>
+
+<!-- Содержимое странички -->
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-0">
+	<h1 class="h2">Admin panel</h1>
 </div>
-<br>
-<a href="/logout" style="font-family:sans-serif;color:indigo;font-size:19px">Logout</a>
+
+<!-- Переключение вкладок -->
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+	<li class="nav-item" role="presentation">
+		<a class="nav-link active" id="home-tab" data-toggle="tab" data-target="#home" type="button" role="tab" aria-controls="tab-allusers" aria-selected="true">Users table</a>
+	</li>
+	<li class="nav-item" role="presentation">
+		<a class="nav-link" id="profile-tab" data-toggle="tab" data-target="#profile" type="button" role="tab" aria-controls="tab-newuser" aria-selected="false">New User</a>
+	</li>
+</ul>
+
+<!-- Содержимое вкладок -->
+<div class="tab-content" id="myTabContent">
+
+<!-- Вкладка список пользователей -->
+<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="tab-allusers">
+
+<div class="card w-100">
+	<div class="card-header"><h5 class="sub-header">All users</h5></div>
+	<div class="card-body">
+
+<div class="table-responsive">
+
+<table class="table table-striped">
+<thead>
+<tr>
+<th>ID</th>
+<th>First Name</th>
+<th>Last name</th>
+<th>Age</th>
+<th>Email</th>
+<th>Role</th>
+<th>Edit</th>
+<th>Delete</th>
+</tr>
+</thead>
+<tbody>
+
+<th:block th:each="usr : ${users}">
+	<tr>
+		<!--        <h1 th:text="|ID=${usr.id}, ${usr.username}, Phone number: ${usr.phone}|"></h1>-->
+
+		<td th:text="${usr.id}"></td>
+		<td th:text="${usr.username}"></td>
+		<td th:text="${usr.lastName}"></td>
+		<td th:text="${usr.age}"></td>
+		<td th:text="${usr.email}"></td>
+		<td>
+			<th:block th:each="role : ${usr.getRoles()}">
+				<span th:text="${role.name}"></span>&nbsp;
+			</th:block>
+		</td>
+<td><button type="button" class="btn btn-info btn-md" data-toggle="modal" th:data-userid="${usr.id}" data-target="#editModalUser">Edit</button></td>
+<td><button type="button" class="btn btn-danger btn-md" data-toggle="modal" th:data-userid="${usr.id}" data-target="#delModalUser">Delete</button></td>
+</tr>
+</th:block>
+
+</tbody>
+</table>
+
+</div>
+
+	</div>
+</div>
+
+</div>
+
+<!-- Вкладка добавить пользователя -->
+<div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="tab-newuser">
+
+<div class="card w-100">
+	<div class="card-header"><h5 class="sub-header">Add new user</h5></div>
+	<div class="card-body">
+
+<div class="container-fluid">
+<div class="row">
+<div class="col-4 offset-4 text-center">
+
+	<form th:method="POST" th:action="@{/admin/new}" th:object="${newUser}" id="formNewUser">
+
+		<strong>First name</strong><br>
+		<input type="text" name="username" th:field="*{username}" class="form-control" /><br>
+
+		<strong>Last name</strong><br>
+		<input type="text" name="lastname" th:field="*{lastName}" class="form-control" /><br>
+
+		<strong>Age</strong><br>
+		<input type="text" name="age" th:field="*{age}" class="form-control" /><br>
+
+		<strong>Email</strong><br>
+		<input type="text" name="email" th:field="*{email}" class="form-control" /><br>
+
+		<strong>Password</strong><br>
+		<input type="password" name="password" th:field="*{password}" class="form-control" required /><br>
+
+		<strong>Role</strong><br>
+		<select size="2" class="form-control" multiple name="roles">
+			<option
+					th:each="role : ${allRoles}"
+					th:value="${role.id}"
+					th:field="*{roles}"
+					th:text="${role.name}"
+			>
+		</select>
+
+		<input type="submit" class="btn btn-md btn-success" form="formNewUser" value="Add new user" />
+
+	</form>
+
+</div>
+</div>
+</div>
+
+	</div>
+</div>
+
+</div>
+
+</div>
+
+</main>
+
+	</div>
+</div>
+
+<div class="modal fade" id="editModalUser" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-hidden="true" aria-labelledby="editModalLabel">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<h5 class="modal-title" id="editModalLabel">Edit user</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			</div>
+
+			<div class="modal-body"><form id="formUpdateUser"></form></div>
+
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				<button type="submit" class="btn btn-primary" form="formUpdateUser">Edit</button>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<div class="modal fade delModal-DIV" id="delModalUser" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-hidden="true" aria-labelledby="delModalLabel">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<h5 class="modal-title" id="delModalLabel">Delete user</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			</div>
+
+			<div class="modal-body"><form id="formDeleteUser"></form></div>
+
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				<button type="submit" class="btn btn-danger" form="formDeleteUser">Delete</button>
+			</div>
+
+		</div>
+	</div>
+</div>
+
 </body>
 </html>

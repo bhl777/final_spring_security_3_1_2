@@ -19,7 +19,20 @@ public class User implements UserDetails {
     private String username;
 
     @Column
+    private String lastName;
+
+    @Column
+    private int age;
+
+    @Column
+    private String email;
+
+    @Column
     private String password;
+
+    public String getLastName() {
+        return lastName;
+    }
 
     @Column
     private String phone;
@@ -33,13 +46,17 @@ public class User implements UserDetails {
 
     public User(){}
 
-    public User(Long id, String username, String password, String phone, Set<Role> roles) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.phone = phone;
+    public User(Set<Role> roles, String phone, String password, String email, int age, String lastName, String username, Long id) {
         this.roles = roles;
+        this.phone = phone;
+        this.password = password;
+        this.email = email;
+        this.age = age;
+        this.lastName = lastName;
+        this.username = username;
+        this.id = id;
     }
+
 
     public Long getId() {
         return id;
@@ -57,12 +74,24 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public String getPhone() {
-        return phone;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Set<Role> getRoles() {

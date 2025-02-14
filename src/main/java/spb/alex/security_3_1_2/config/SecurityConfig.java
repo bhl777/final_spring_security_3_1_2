@@ -21,9 +21,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/admin/**").hasRole("ADMIN")
-                .requestMatchers("/user").hasAnyRole("USER", "ADMIN")
-                .anyRequest().authenticated())
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/user").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/static/**", "/css/**", "/js/**", "/images/**").permitAll()
+                        .anyRequest().authenticated())
                 .formLogin(formLogin -> formLogin
                         .successHandler(successUserHandler))
                 .logout(logout -> logout.logoutSuccessUrl("/users"));

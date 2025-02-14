@@ -1,39 +1,39 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Change User</title>
-</head>
-<body>
-<p>Change User</p>
-<form th:method="POST" th:action="@{|/admin/update?id=${user.id}|}" th:object="${user}">
-    <label for="name">Name:</label>
-    <input type="text" th:field="*{username}" id="name">
-    <br>
-    <label for="phone">Phone:</label>
-    <input type="text" th:field="*{phone}" id="phone">
-    <br>
+<div class="container-fluid">
+<div class="row">
+<div class="col-6 offset-3 text-center">
 
-    <label for="pass">Pass:</label>
-    <input type="password" th:field="*{password}" id="pass" required>
-    <br>
+<form th:method="POST" th:action="@{|/admin/update?id=${user.id}|}" th:object="${user}" id="formUpdateUser">
 
-    <div th:each="role : ${allRoles}">
-        <label>
-            <input
-                    type="checkbox"
-                    th:value="${role.id}"
-                    th:field="*{roles}"
-                    th:text="${role.name}"
-            >
-        </label>
-    </div>
+	<strong>ID</strong><br>
+	<input type="text" name="ID" th:field="*{id}" class="form-control" readonly /><br>
 
-    <input type="submit" value="Update"/>
+	<strong>First name</strong><br>
+	<input type="text" name="username" th:field="*{username}" class="form-control" /><br>
+
+	<strong>Last name</strong><br>
+	<input type="text" name="lastname" th:field="*{lastName}" class="form-control" /><br>
+
+	<strong>Age</strong><br>
+	<input type="text" name="age" th:field="*{age}" class="form-control" /><br>
+
+	<strong>Email</strong><br>
+	<input type="text" name="email" th:field="*{email}" class="form-control" /><br>
+
+	<strong>Password</strong><br>
+	<input type="password" name="password" th:field="*{password}" class="form-control" required /><br>
+
+	<strong>Role</strong><br>
+	<select size="2" class="form-control" multiple name="roles">
+		<option
+				th:each="role : ${allRoles}"
+				th:value="${role.id}"
+				th:field="*{roles}"
+				th:text="${role.name}"
+		>
+	</select>
+
 </form>
 
-<br>
-<a href="/logout" style="font-family:sans-serif;color:indigo;font-size:19px">Logout</a><br>
-
-</body>
-</html>
+</div>
+</div>
+</div>

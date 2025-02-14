@@ -1,0 +1,286 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="">
+<meta name="author" content="">
+<meta name="generator" content="">
+<title>Dashboard</title>
+
+<!-- Bootstrap core CSS -->
+<link href="/css/bootstrap.min.css" rel="stylesheet">
+<script src="/js/jquery.slim.min.js"></script>
+<script src="/js/bootstrap.bundle.min.js"></script>
+
+<!-- Custom styles for this template -->
+<link href="/css/dashboard.css" rel="stylesheet">
+
+</head>
+<body>
+
+<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+	<a class="navbar-brand border border-danger bg-transparent border-0 shadow-none mr-0 px-3" href="javascript:void(0)"><stong>${user.email}</strong> with roles: <!-- TL: цикл ролей -->*{role}<!-- /TL: цикл ролей --></a>
+	<button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+	<ul class="navbar-nav px-3">
+		<li class="nav-item text-nowrap">
+			<a class="nav-link" href="#">Logout</a>
+		</li>
+	</ul>
+</nav>
+
+<div class="container-fluid">
+	<div class="row">
+
+<!-- Боковое меню -->
+<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+	<div class="sidebar-sticky pt-3">
+		<ul class="nav nav-pills flex-column">
+			<li class="nav-item">
+				<a class="nav-link active" href="admin.html">Admin <span class="sr-only">(current)</span></a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="../user.html">User</a>
+			</li>
+		</ul>
+	</div>
+</nav>
+
+<!-- Содержимое странички -->
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-0">
+	<h1 class="h2">Admin panel</h1>
+</div>
+
+<!-- Переключение вкладок -->
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+	<li class="nav-item" role="presentation">
+		<a class="nav-link active" id="home-tab" data-toggle="tab" data-target="#home" type="button" role="tab" aria-controls="tab-allusers" aria-selected="true">Users table</a>
+	</li>
+	<li class="nav-item" role="presentation">
+		<a class="nav-link" id="profile-tab" data-toggle="tab" data-target="#profile" type="button" role="tab" aria-controls="tab-newuser" aria-selected="false">New User</a>
+	</li>
+</ul>
+
+<!-- Содержимое вкладок -->
+<div class="tab-content" id="myTabContent">
+
+<!-- Вкладка список пользователей -->
+<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="tab-allusers">
+
+<div class="card w-100">
+	<div class="card-header"><h5 class="sub-header">All users</h5></div>
+	<div class="card-body">
+
+<div class="table-responsive">
+
+<table class="table table-striped">
+<thead>
+<tr>
+<th>ID</th>
+<th>First Name</th>
+<th>Last name</th>
+<th>Age</th>
+<th>Email</th>
+<th>Role</th>
+<th>Edit</th>
+<th>Delete</th>
+</tr>
+</thead>
+<tbody>
+
+<!-- TL: цикл по пользователям -->
+<th:block th:each="usr : ${users}">
+<tr>
+<!--        <h1 th:text="|ID=${usr.id}, ${usr.username}, Phone number: ${usr.phone}|"></h1>-->
+
+	<td th:text="${usr.id}"></td>
+    <td th:text="${usr.username}"></td>
+    <td th:text="${usr.lastName}"></td>
+    <td th:text="${usr.age}"></td>
+    <td th:text="${usr.email}"></td>
+    <td>
+    <th:block th:each="role : ${usr.getRoles()}">
+        <span th:text="${role.name}"> Title </span>&nbsp;
+    </th:block>
+    </td>
+
+<td>
+
+<!-- *********************** -->
+<!--     РЕДАКТИРОВНИЕ       -->
+<!-- *********************** -->
+
+<button type="button" class="btn btn-info btn-md" data-toggle="modal" th:data-target="@{|#editModal-User_${usr.id}|}">Edit</button>
+
+<div class="modal fade" th:id="@{|editModal-User_${usr.id}|}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-hidden="true" th:aria-labellby="@{|editModalLabel-User__user-ID_${usr.id}|}">
+<div class="modal-dialog modal-lg modal-dialog-scrollable">
+<div class="modal-content">
+
+<div class="modal-header">
+	<h5 class="modal-title" th:id="@{|editModalLabel-User__user-ID_${usr.id}|}">Edit user</h5>
+	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+
+<form th:method="POST" th:action="@{|/admin/update?id=${usr.id}|}" th:object="${user}">
+
+<div class="modal-body">
+
+<div class="container-fluid">
+<div class="row">
+<div class="col-6 offset-3 text-center">
+
+<!-- TL: update.html -->
+<input type="hidden" name="action" value="edit">
+<strong>ID</strong><br><input type="text" name="ID" th:value="${usr.id}" class="form-control" readonly /><br>
+<strong>First name</strong><br><input type="text" name="username" th:value="${usr.username}" class="form-control" /><br>
+<strong>Last name</strong><br><input type="text" name="lastname" th:value="${usr.lastName}" class="form-control" /><br>
+<strong>Age</strong><br><input type="text" name="age" th:value="${usr.age}" class="form-control" /><br>
+<strong>Email</strong><br><input type="text" name="email" th:value="${usr.email}" class="form-control" /><br>
+<strong>Password</strong><br><input type="password" name="password" class="form-control" required /><br>
+<strong>Role</strong><br>
+
+<select name="roles" size="2" class="form-control" multiple>
+	<option th:each="role : ${allRoles}"
+
+		th:value="${role.id}"
+		th:text="${role.name}">
+</select>
+
+<!-- /TL: update.html -->
+
+</div>
+</div>
+</div>
+
+</div>
+
+<div class="modal-footer">
+	<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+	<button type="submit" class="btn btn-primary">Edit</button>
+</div>
+
+</form>
+
+</div>
+</div>
+</div>
+
+</td>
+<td>
+
+<!-- *********************** -->
+<!--        УДАЛЕНИЕ         -->
+<!-- *********************** -->
+
+<button type="button" class="btn btn-danger btn-md" data-toggle="modal" data-target="#delModal-User__user-ID_">Delete</button>
+
+<div class="modal fade" id="delModal-User__user-ID_" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-hidden="true" aria-labelledby="delModalLabel-User__user-ID_">
+<div class="modal-dialog modal-lg modal-dialog-scrollable">
+<div class="modal-content">
+
+<div class="modal-header">
+	<h5 class="modal-title" id="delModalLabel-User__user-ID_">Delete user</h5>
+	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+
+<form action="">
+
+<div class="modal-body">
+
+<div class="container-fluid">
+<div class="row">
+<div class="col-6 offset-3 text-center">
+
+<!-- TL: delete.html -->
+<input type="hidden" name="action" value="delete">
+<strong>ID</strong><br><input type="text" name="ID" value="8" class="form-control" readonly /><br>
+<strong>First name</strong><br><input type="text" name="username" value="111" class="form-control" readonly /><br>
+<strong>Last name</strong><br><input type="text" name="lastname" value="111" class="form-control" readonly /><br>
+<strong>Age</strong><br><input type="text" name="age" value="111" class="form-control" readonly /><br>
+<strong>Email</strong><br><input type="text" name="email" value="111" class="form-control" readonly /><br>
+<strong>Role</strong><br>
+<select size="2" class="form-control" multiple readonly>
+	<option selected>ADMIN</option>
+	<option>USER</option>
+	<option selected>MODERATOR</option>
+</select>
+<!-- /TL: delete.html -->
+
+</div>
+</div>
+</div>
+
+</div>
+
+<div class="modal-footer">
+	<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+	<button type="submit" class="btn btn-danger">Delete</button>
+</div>
+
+</form>
+
+</div>
+</div>
+</div>
+
+</td>
+</tr>
+</th:block>
+<!-- /TL: цикл по пользователям -->
+
+</tbody>
+</table>
+
+</div>
+
+	</div>
+</div>
+
+</div>
+
+<!-- Вкладка добавить пользователя -->
+<div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="tab-newuser">
+
+<div class="card w-100">
+	<div class="card-header"><h5 class="sub-header">Add new user</h5></div>
+	<div class="card-body">
+
+<div class="container-fluid">
+<div class="row">
+<div class="col-4 offset-4 text-center">
+
+<input type="hidden" name="action" value="add">
+<strong>First name</strong><br><input type="text" name="username" value="" class="form-control" required /><br>
+<strong>Last name</strong><br><input type="text" name="lastname" value="" class="form-control" /><br>
+<strong>Age</strong><br><input type="text" name="age" value="" class="form-control" /><br>
+<strong>Email</strong><br><input type="text" name="email" value="" class="form-control" /><br>
+<strong>Password</strong><br><input type="password" name="password" class="form-control" required /><br>
+<strong>Role</strong><br>
+<select size="2" class="form-control" multiple required>
+	<option>ADMIN</option>
+	<option>USER</option>
+	<option>MODERATOR</option>
+</select><br>
+
+<input type="submit" class="btn btn-md btn-success" value="Add new user" />
+
+</div>
+</div>
+</div>
+
+	</div>
+</div>
+
+</div>
+
+</div>
+
+</main>
+
+	</div>
+</div>
+
+</body>
+</html>
